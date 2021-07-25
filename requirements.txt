@@ -1,0 +1,5 @@
+fastapi==0.67.0
+fastapi_crudrouter==0.8.0
+pydantic==1.8.2
+python_bcrypt==0.3.2
+SQLAlchemy==1.4.22
