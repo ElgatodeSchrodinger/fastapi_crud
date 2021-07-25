@@ -3,3 +3,4 @@ fastapi_crudrouter==0.8.0
 pydantic==1.8.2
 python_bcrypt==0.3.2
 SQLAlchemy==1.4.22
+uvicorn==0.14.0
