@@ -3,41 +3,41 @@ from sqlalchemy.orm import relationship
 from database import Base, engine
 
 
+class Producto(Base):
+    __tablename__ = "producto"
+
+    id = Column(Integer, primary_key=True, index=True)
+    estado = Column(Boolean, default=True)
+    nombre = Column(String)
+    precio = Column(Float)
+    stock = Column(Integer)
+    # detalleventa = relationship("DetalleVenta", back_populates="product")
+
+class DetalleVenta(Base):
+    __tablename__ = "detalleventa"
+
+    id = Column(Integer, primary_key=True, index=True)
+    cantidad = Column(Integer)
+    sub_total = Column(Float)
+    id_product = Column(Integer, ForeignKey('producto.id'))
+    product = relationship("Producto") #, back_populates="detalleventa")
+    id_venta = Column(Integer, ForeignKey('venta.id'))
+    venta = relationship("Venta", back_populates="detalleventa")
 
 
+class Venta(Base):
+    __tablename__ = "venta"
 
+    id = Column(Integer, primary_key=True, index=True)
+    estado = Column(String, default=True)
+    fecha = Column(DateTime)
+    monto_total = Column(Float)
+    id_cliente = Column(Integer, ForeignKey('client.id'))
+    cliente = relationship("Client")
+    id_empleado = Column(Integer, ForeignKey('employee.id'))
+    empleado = relationship("Employee")
 
-
-# class Producto(Base):
-#     __tablename__ = "producto"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     estado = Column(Boolean, default=True)
-#     nombre = Column(String)
-#     precio = Column(Float)
-#     stock = Column(Integer)
-#     detalleventa = relationship("DetalleVenta", back_populates="id_venta")
-
-# class DetalleVenta(Base):
-#     __tablename__ = "detalleventa"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     cantidad = Column(Integer)
-#     sub_total = Column(Float)
-#     id_product = Column(Integer, ForeignKey('producto.id'))
-#     id_venta = Column(Integer, ForeignKey('venta.id'))
-
-
-# class Venta(Base):
-#     __tablename__ = "venta"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     estado = Column(Boolean, default=True)
-#     fecha = Column(DateTime)
-#     monto_total = Column(Float)
-#     id_cliente = Column(Integer, ForeignKey('client.id'))
-#     id_empleado = Column(Integer, ForeignKey('employee.id'))
-#     detalleventa = relationship("DetalleVenta", back_populates="id_venta")
+    detalleventa = relationship("DetalleVenta", back_populates="venta")
 
 
 
@@ -62,9 +62,9 @@ class Employee(Base):
     celular = Column(String)
     direccion = Column(String)
     fecha_nacimiento = Column(DateTime)
-    user = relationship("User", back_populates="empleado", uselist=False)
+    user = relationship("User", back_populates="empleado")
     id_user = Column(Integer, ForeignKey('user.id'))
-    # venta = relationship("Venta", back_populates="id_cliente")
+    # venta = relationship("Venta", back_populates="empleado")
 
 class Client(Base):
     __tablename__ = "client"
@@ -77,7 +77,7 @@ class Client(Base):
     celular = Column(String)
     direccion = Column(String)
     fecha_nacimiento = Column(DateTime)
-    user = relationship("User", back_populates="cliente", uselist=False)
+    user = relationship("User", back_populates="cliente")
     id_user = Column(Integer, ForeignKey('user.id'))
-    # venta = relationship("Venta", back_populates="id_cliente")
+    # venta = relationship("Venta", back_populates="cliente")
 
