@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from typing import ForwardRef, List, Optional
 
 
-
+from fastapi import Form
 
 class EmployeeBase(BaseModel):
     id: int
@@ -116,7 +116,8 @@ class ProductBase(BaseModel):
     nombre: str
     precio: float
     stock: int
-    
+    image: str
+
 
 class ProductCreate(ProductBase):
     pass

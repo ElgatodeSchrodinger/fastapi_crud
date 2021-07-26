@@ -1,5 +1,5 @@
 import bcrypt
-from fastapi import APIRouter
+from fastapi import APIRouter, UploadFile, File
 from fastapi_crudrouter import SQLAlchemyCRUDRouter
 from sqlalchemy.sql import select
 from database import Session
@@ -73,6 +73,33 @@ product_router = SQLAlchemyCRUDRouter(
     db=get_db,
     prefix='/producto'
 )
+
+# import uuid
+# IMAGEDIR = "fastapi-images/"
+
+# @product_router.post('')
+# def create_product(product: SchemeProduct, file: UploadFile = File(...), db: Session = Depends(get_db)):
+
+#     print(**product.dict())
+#     file.filename = f"{uuid.uuid4()}.jpg"
+#     contents = file.read()  # <-- Important!
+
+#     # example of how you can save the file
+#     with open(f"{IMAGEDIR}{file.filename}", "wb") as f:
+#         f.write(contents)
+
+    
+#     Product = ModelProducto(image=f"{IMAGEDIR}{file.filename}", **product)
+
+
+#     db.add(Product)
+#     db.commit()
+#     db.refresh(Product)
+#     return Product
+
+
+
+
 
 router = APIRouter()
 

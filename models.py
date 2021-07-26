@@ -1,6 +1,7 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Float
 from sqlalchemy.orm import relationship
 from database import Base, engine
+# from sqlalchemy_utils import URLType
 
 
 class Producto(Base):
@@ -11,6 +12,7 @@ class Producto(Base):
     nombre = Column(String)
     precio = Column(Float)
     stock = Column(Integer)
+    image = Column(String, nullable=True)
     # detalleventa = relationship("DetalleVenta", back_populates="product")
 
 class DetalleVenta(Base):
