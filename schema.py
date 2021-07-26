@@ -4,8 +4,6 @@ from pydantic import BaseModel
 from typing import ForwardRef, List, Optional
 
 
-
-
 class EmployeeBase(BaseModel):
     id: int
     name: str
@@ -26,7 +24,6 @@ class EmployeeCreate(BaseModel):
     phone: str
     address: str
     birthday: datetime
-    user_id: int
     # user: List[UserCreate] = []
 
 
@@ -51,23 +48,30 @@ class ClientCreate(BaseModel):
     phone: str
     address: str
     birthday: datetime
-    user_id: int
     # user: List[UserCreate] = []
 
 
 class UserBase(BaseModel):
     id: int
-    email: str
-    is_active: bool
-    employee: List[EmployeeBase] = []
-    client: List[ClientBase] = []
+    nombre: str
+    estado: bool
+    id_empleado: List[EmployeeBase] = []
+    id_cliente: List[ClientBase] = []
 
 class UserCreate(BaseModel):
-    email: str
-    hashed_password: str
-    is_active: bool
-    employee: List[EmployeeCreate] = []
-    client: List[ClientCreate] = []
+    nombre: str
+    clave: str
+    estado: bool
+    tipo: str
+    nombres: str
+    apellidos: str
+    dni: str
+    genero: str
+    celular: str
+    direccion: str
+    fecha_nacimiento: datetime
+    # empleado: EmployeeCreate = None
+    # cliente: ClientCreate = None
 
 
 class User(UserBase):
@@ -89,3 +93,12 @@ class Client(ClientBase):
     
     class Config:
         orm_mode = True
+
+
+
+
+## Auxiliar BaseScheme
+
+class Login(BaseModel):
+    usuario: str
+    clave: str

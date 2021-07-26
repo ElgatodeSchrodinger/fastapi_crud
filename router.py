@@ -1,7 +1,12 @@
 import bcrypt
 from fastapi import APIRouter
-
 from fastapi_crudrouter import SQLAlchemyCRUDRouter
+from sqlalchemy.sql import select
+from database import Session
+
+from schema import Login
+from database import get_db
+from fastapi import Depends
 #the following line of code are to import the user in our model and schema
 from models import User as ModelUser
 from models import Employee as ModelEmployee
@@ -44,13 +49,44 @@ client_router = SQLAlchemyCRUDRouter(
     prefix='/client'
 )
 
-# @router.post("/register", response_model=Users)
-# async def create_user(user: SchemaUser):
-#     hashed_password = bcrypt.hashpw(user.hashed_password.encode('utf-8'), bcrypt.gensalt())
-#     user_dict = user.dict()
-#     user_dict['hashed_password'] = hashed_password
-#     User = ModelUser(**user_dict)
-#     db.session.add(User)
-#     db.session.commit()
-#     db.session.refresh(User)
-#     return User
+router = APIRouter()
+
+
+
+@router.post("/register", response_model=Users)
+async def create_user(user: SchemaUser, db: Session = Depends(get_db)):
+    hashed_password = bcrypt.hashpw(user.clave.encode('utf-8'), bcrypt.gensalt())
+    user_dict = user.dict()
+    user_dict['clave'] = hashed_password
+    
+    user_data = {}
+    person_data = {}
+    user_fields = ('nombre', 'clave', 'estado')
+    for field in user_dict.keys():
+        if field in user_fields:
+            user_data[field] = user_dict[field]
+        else:
+            person_data[field] = user_dict[field]
+
+    User = ModelUser(**user_data)
+    type_user = person_data.pop('tipo', None)
+    if type_user == "empleado":
+        Employee = ModelEmployee(**person_data)
+        db.add(Employee)
+    elif type_user == "cliente":
+        Client = ModelClient(**person_data)
+        db.add(Client)
+    db.add(User)
+    db.commit()
+    db.refresh(User)
+    db.refresh(Employee)
+    db.refresh(Client)
+    return User
+
+@router.post("/login")
+def login(request: Login, db: Session = Depends(get_db)):
+    print(type(ModelUser))
+    users = db.query(ModelUser).first()
+    # user = db.execute(select(ModelUser).where(ModelUser.c.id == 1))
+    # res_user = Session.query(ModelUser).filter_by(**request).one()
+    return users
