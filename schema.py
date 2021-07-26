@@ -70,8 +70,6 @@ class UserCreate(BaseModel):
     celular: str
     direccion: str
     fecha_nacimiento: datetime
-    # empleado: EmployeeCreate = None
-    # cliente: ClientCreate = None
 
 
 class User(UserBase):

@@ -69,24 +69,64 @@ async def create_user(user: SchemaUser, db: Session = Depends(get_db)):
             person_data[field] = user_dict[field]
 
     User = ModelUser(**user_data)
-    type_user = person_data.pop('tipo', None)
-    if type_user == "empleado":
-        Employee = ModelEmployee(**person_data)
-        db.add(Employee)
-    elif type_user == "cliente":
-        Client = ModelClient(**person_data)
-        db.add(Client)
+
     db.add(User)
     db.commit()
     db.refresh(User)
-    db.refresh(Employee)
-    db.refresh(Client)
+
+    type_user = person_data.pop('tipo', None)
+    person_data['id_user'] = User.id
+    
+    # print(person_data)
+
+    if type_user == "empleado":
+        Employee = ModelEmployee(**person_data)
+        db.add(Employee)
+        db.commit()
+        db.refresh(Employee)
+    elif type_user == "cliente":
+        Client = ModelClient(**person_data)
+        db.add(Client)
+        db.commit()
+        db.refresh(Client)
+
     return User
 
 @router.post("/login")
 def login(request: Login, db: Session = Depends(get_db)):
     print(type(ModelUser))
-    users = db.query(ModelUser).first()
+    nombre = request.usuario
+    clave = request.clave
+
+    user = db.query(ModelUser).filter(ModelUser.nombre == nombre).first()
+
+    if user and bcrypt.checkpw(clave.encode('utf-8'), user.clave):
+        is_employee = db.query(ModelEmployee).filter(ModelEmployee.id_user == user.id).first()
+        is_client = db.query(ModelClient).filter(ModelClient.id_user == user.id).first()
+        if is_employee:
+            return {
+                "nombre": is_employee.nombres,
+                "tipousuario": "empleado",
+                "id_user": user.id,
+                "id": is_employee.id,
+
+            }
+        elif is_client:
+            return {
+                "nombre": is_client.nombres,
+                "tipousuario": "cliente",
+                "id_user": user.id,
+                "id": is_client.id,
+            }
+        else:
+            return {
+                "nombre": user.nombre,
+                "id_user": user.id,
+                "message": "Usuario o contraseña no coinciden"}
+    else:
+        return {"message": "Usuario o contraseña no coinciden"}
+
+    
     # user = db.execute(select(ModelUser).where(ModelUser.c.id == 1))
     # res_user = Session.query(ModelUser).filter_by(**request).one()
-    return users
+    # return users

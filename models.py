@@ -48,14 +48,8 @@ class User(Base):
     nombre = Column(String, unique=True, index=True)
     clave = Column(String)
     estado = Column(Boolean, default=True)
-    # id_client = Column(Integer, ForeignKey('client.id'))
-    # id_employee = Column(Integer, ForeignKey('employee.id'))
-    # employee = relationship("Employee", back_populates="user")
-    # client = relationship("Client", back_populates="user")
-    id_empleado = Column(Integer, ForeignKey('employee.id'), nullable=True)
-    empleado = relationship("Employee", back_populates="user")
-    id_cliente = Column(Integer, ForeignKey('client.id'), nullable=True)
-    cliente = relationship("Client", back_populates="user")
+    empleado = relationship("Employee", back_populates="user", uselist=False)
+    cliente = relationship("Client", back_populates="user", uselist=False)
 
 class Employee(Base):
     __tablename__ = "employee"
@@ -69,6 +63,7 @@ class Employee(Base):
     direccion = Column(String)
     fecha_nacimiento = Column(DateTime)
     user = relationship("User", back_populates="empleado", uselist=False)
+    id_user = Column(Integer, ForeignKey('user.id'))
     # venta = relationship("Venta", back_populates="id_cliente")
 
 class Client(Base):
@@ -83,5 +78,6 @@ class Client(Base):
     direccion = Column(String)
     fecha_nacimiento = Column(DateTime)
     user = relationship("User", back_populates="cliente", uselist=False)
+    id_user = Column(Integer, ForeignKey('user.id'))
     # venta = relationship("Venta", back_populates="id_cliente")
 
