@@ -201,7 +201,13 @@ def registrar_venta(request: SaleCreate, db: Session = Depends(get_db)):
 
     venta_data = request.dict()
 
+    product_sale = {}
+
+    for detalle in venta_data['detalle_venta']:
+        Product = db.query(ModelProducto).filter(ModelProducto.id == detalle['cantidad']).first()
+        product_sale[Product.id] = detalle['cantidad'], Product.stock
     
+    product_avaiable
 
     lines = venta_data.pop('detalle_venta', [])
     # print(venta_data)
@@ -218,6 +224,7 @@ def registrar_venta(request: SaleCreate, db: Session = Depends(get_db)):
         line_data = line
         line_data['id_venta'] = Venta.id
         DetalleVenta = ModelDetalleVenta(**line_data)
+
         db.add(DetalleVenta)
         db.commit()
         db.refresh(DetalleVenta)

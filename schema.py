@@ -86,6 +86,7 @@ class UserCreate(BaseModel):
     dni: str
     genero: str
     celular: str
+    email: str
     direccion: str
     fecha_nacimiento: datetime
 class User(UserBase):
