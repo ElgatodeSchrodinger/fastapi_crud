@@ -120,6 +120,7 @@ class ProductBase(BaseModel):
     precio: float
     stock: int
     image: str
+    description: str
 
 
 class ProductCreate(ProductBase):

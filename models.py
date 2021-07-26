@@ -13,6 +13,7 @@ class Producto(Base):
     precio = Column(Float)
     stock = Column(Integer)
     image = Column(String, nullable=True)
+    description = Column(String, nullable=True)
     # detalleventa = relationship("DetalleVenta", back_populates="product")
 
 class DetalleVenta(Base):

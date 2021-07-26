@@ -74,6 +74,11 @@ product_router = SQLAlchemyCRUDRouter(
     prefix='/producto'
 )
 
+
+# @employee_router.delete('{/{item_id}}')
+# def delete_employee(id_employee: int):
+
+
 # import uuid
 # IMAGEDIR = "fastapi-images/"
 
