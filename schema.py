@@ -155,7 +155,7 @@ class AltDetalleVenta(BaseModel):
 class SaleCreate(BaseModel):
     fecha: datetime
     id_cliente: int
-    id_empleado: int
+    id_empleado: Optional[int]
     estado: str
     monto_total: float
     detalle_venta: List[AltDetalleVenta]
