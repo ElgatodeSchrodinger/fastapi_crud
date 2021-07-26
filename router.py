@@ -75,9 +75,14 @@ product_router = SQLAlchemyCRUDRouter(
 )
 
 
-# @employee_router.delete('{/{item_id}}')
-# def delete_employee(id_employee: int):
+@employee_router.delete('{/{item_id}}')
+def delete_employee(id_employee: int, db: Session = Depends(get_db)):
 
+    employee = db.query(ModelEmployee).filter(ModelEmployee.id == id_employee).first()
+    db.query(ModelUser).filter(ModelUser.id == employee.id_user).delete()
+    db.commit()
+    employee.delete()
+    db.commit()
 
 # import uuid
 # IMAGEDIR = "fastapi-images/"

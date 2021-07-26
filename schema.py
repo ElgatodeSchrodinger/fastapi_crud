@@ -13,7 +13,7 @@ class EmployeeBase(BaseModel):
     dni: str
     genero: str
     celular: str
-    email: str
+    email: Optional[str]
     direccion: str
     fecha_nacimiento: datetime
     id_user: int
