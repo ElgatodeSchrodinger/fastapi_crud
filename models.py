@@ -62,6 +62,7 @@ class Employee(Base):
     dni = Column(String)
     genero = Column(String)
     celular = Column(String)
+    email = Column(String)
     direccion = Column(String)
     fecha_nacimiento = Column(DateTime)
     user = relationship("User", back_populates="empleado")

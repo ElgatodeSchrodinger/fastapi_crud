@@ -13,6 +13,7 @@ class EmployeeBase(BaseModel):
     dni: str
     genero: str
     celular: str
+    email: str
     direccion: str
     fecha_nacimiento: datetime
     id_user: int
@@ -24,6 +25,7 @@ class EmployeeUpdate(BaseModel):
     dni: Optional[str]
     genero: Optional[str]
     celular: Optional[str]
+    email: Optional[str]
     direccion: Optional[str]
     fecha_nacimiento: Optional[datetime]
 
@@ -33,6 +35,7 @@ class EmployeeCreate(BaseModel):
     dni: str
     genero: str
     celular: str
+    email: str
     direccion: str
     fecha_nacimiento: datetime
     # user: List[UserCreate] = []

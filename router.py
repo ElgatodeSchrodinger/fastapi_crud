@@ -258,6 +258,7 @@ def update_estado(id_empleado: int, payload: EmployeeUpdate, db: Session = Depen
     res.dni = payload.dni if payload.dni else res.dni
     res.genero = payload.genero if payload.genero else res.genero
     res.celular = payload.celular if payload.celular else res.celular
+    res.email = payload.email if payload.email else res.email
     res.direccion = payload.direccion if payload.direccion else res.direccion
     res.fecha_nacimiento = payload.fecha_nacimiento if payload.fecha_nacimiento else res.fecha_nacimiento
     db.commit()
