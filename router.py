@@ -249,11 +249,12 @@ def get_all_ventas(db: Session = Depends(get_db)):
     res = db.query(ModelVenta).all()
     return res
 
-@router.put("/venta/{id_venta}/{id_empleado}")
-def update_estado(id_venta: int, id_empleado: int, payload: SaleUpdate, db: Session = Depends(get_db)):
+@router.put("/venta/{id_venta}")
+def update_estado(id_venta: int, payload: SaleUpdate, db: Session = Depends(get_db)):
     res = db.query(ModelVenta).filter(ModelVenta.id==id_venta).first()
     res.estado = payload.estado
-    res.id_empleado = id_empleado
+    if payload.id_empleado:
+        res.id_empleado = payload.id_empleado
     db.commit()
     return res
 

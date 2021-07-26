@@ -176,3 +176,4 @@ class Sale(SaleBase):
 
 class SaleUpdate(BaseModel):
     estado: str
+    id_empleado: Optional[int]
