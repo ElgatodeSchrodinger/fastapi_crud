@@ -218,7 +218,7 @@ def registrar_venta(request: SaleCreate, db: Session = Depends(get_db)):
             db.commit()
             db.refresh(Venta)
         except:
-            print("Error :c")
+            print("Error al crear venta")
 
         lines_ids = []
         for line in lines:
