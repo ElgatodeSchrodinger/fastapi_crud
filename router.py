@@ -204,37 +204,46 @@ def registrar_venta(request: SaleCreate, db: Session = Depends(get_db)):
     product_sale = {}
 
     for detalle in venta_data['detalle_venta']:
-        Product = db.query(ModelProducto).filter(ModelProducto.id == detalle['cantidad']).first()
-        product_sale[Product.id] = detalle['cantidad'], Product.stock
+        Product = db.query(ModelProducto).filter(ModelProducto.id == detalle['id_product']).first()
+        product_sale[Product.id] = detalle['cantidad'], Product.stock, Product
     
-    product_avaiable
+    product_avaiable = all([product[0] <= product[1] for product in product_sale.values() ])
 
-    lines = venta_data.pop('detalle_venta', [])
-    # print(venta_data)
-    try:
-        Venta = ModelVenta(**venta_data)
-        db.add(Venta)
-        db.commit()
-        db.refresh(Venta)
-    except:
-        print("Error :c")
+    if product_avaiable:
+        lines = venta_data.pop('detalle_venta', [])
+        # print(venta_data)
+        try:
+            Venta = ModelVenta(**venta_data)
+            db.add(Venta)
+            db.commit()
+            db.refresh(Venta)
+        except:
+            print("Error :c")
 
-    lines_ids = []
-    for line in lines:
-        line_data = line
-        line_data['id_venta'] = Venta.id
-        DetalleVenta = ModelDetalleVenta(**line_data)
+        lines_ids = []
+        for line in lines:
+            line_data = line
+            line_data['id_venta'] = Venta.id
+            DetalleVenta = ModelDetalleVenta(**line_data)
+            db.add(DetalleVenta)
+            db.commit()
+            db.refresh(DetalleVenta)
 
-        db.add(DetalleVenta)
-        db.commit()
-        db.refresh(DetalleVenta)
-        lines_ids.append(DetalleVenta.id)
+            if DetalleVenta.id_product in product_sale.keys():
+                data_product = product_sale[DetalleVenta.id_product]
+                data_product[2].stock = data_product[1] - data_product[0]
+                db.commit()
+            lines_ids.append(DetalleVenta.id)
 
-    # print(request.detalle_venta)
-    return {
-        "id_venta": Venta.id,
-        "ids_detallesventa": lines_ids
-    }
+        # print(request.detalle_venta)
+        return {
+            "id_venta": Venta.id,
+            "ids_detallesventa": lines_ids
+        }
+    else:
+        return {
+            "message": "No se tiene stock suficiente para la venta"
+        }
 
 
 # @router.get("/venta")
