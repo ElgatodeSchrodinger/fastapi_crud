@@ -107,7 +107,15 @@ def delete_employee(id_employee: int, db: Session = Depends(get_db)):
 #     db.refresh(Product)
 #     return Product
 
-
+def resultToDict(result):
+    ds = []
+    for rows in result:
+        d = {}
+        for row in rows:
+            for col in row.__table__.columns:
+                d[col.name] = str(getattr(row, col.name))
+        ds.append(d)
+    return ds
 
 
 
@@ -263,6 +271,24 @@ def registrar_venta(request: SaleCreate, db: Session = Depends(get_db)):
 @router.get("/venta")
 def get_all_ventas(db: Session = Depends(get_db)):
     res = db.query(ModelVenta).all()
+    print(res)
+    for venta_rec in res:
+        rec = venta_rec.__dict__
+        cliente = db.query(ModelClient).filter(ModelClient.id==rec['id_cliente']).first()
+        empleado = db.query(ModelEmployee).filter(ModelEmployee.id==rec['id_empleado']).first()
+        detallesVenta = db.query(ModelDetalleVenta).filter(ModelDetalleVenta.id_venta==rec['id']).all()
+        detalles = []
+        for dv_rec in detallesVenta:
+            dv = dv_rec.__dict__
+            # print(dv)
+            producto = {}
+            if dv.get('id_product'):
+                producto = db.query(ModelProducto).filter(ModelProducto.id==dv['id_product']).first()
+            dv['id_product'] = producto
+            detalles.append(dv)
+        rec['id_cliente'] = cliente
+        rec['id_empleado'] = empleado
+        rec['detalles'] = detalles
     return res
 
 @router.put("/venta/{id_venta}/{id_empleado}")
