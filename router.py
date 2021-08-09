@@ -295,7 +295,7 @@ def get_all_ventas(db: Session = Depends(get_db)):
 def update_estado(id_venta: int, id_empleado: int, payload: SaleUpdate, db: Session = Depends(get_db)):
     res = db.query(ModelVenta).filter(ModelVenta.id==id_venta).first()
     res.estado = payload.estado
-    if payload.id_empleado:
+    if id_empleado:
         res.id_empleado = id_empleado
     db.commit()
     return res
